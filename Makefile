@@ -36,7 +36,7 @@ $(SERVER_EXEC): $(SERVER_OBJS)
 
 
 clean:
-	$(RM) $(OBJS)
+	$(RM) $(CLIENT_OBJS) $(SERVER_OBJS)
 
 dist-clean: clean
-	$(RM) $(BIN)d
+	$(RM) $(BIN)
