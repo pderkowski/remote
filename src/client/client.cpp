@@ -2,22 +2,26 @@
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 
 using boost::asio::ip::tcp;
 
-void sendHello(tcp::socket& socket) {
-  std::string hello = "Hello!\n";
-  boost::system::error_code error;
-  socket.write_some( boost::asio::buffer(hello.c_str(), hello.size()), error );
+std::string getMessage() {
+  std::string message;
+  std::getline(std::cin, message);
+  message += '\n';
+  return message;
 }
 
-void repeatedlySendHelloMessages(tcp::socket& socket, boost::asio::io_service& io) {
+void sendMessage(const std::string& message, tcp::socket& socket) {
+  boost::system::error_code error;
+  socket.write_some( boost::asio::buffer(message.c_str(), message.size()), error );
+}
+
+void repeatedlySendMessages(tcp::socket& socket, boost::asio::io_service& io) {
   while(true) {
-    boost::asio::deadline_timer timer(io, boost::posix_time::seconds(1));
-    timer.wait();
-    sendHello(socket);
-    std::cout << "Sent" << std::endl;
+    std::string message = getMessage();
+    sendMessage(message, socket);
+    std::cout << "Message sent!" << std::endl;
   }
 }
 
@@ -35,7 +39,7 @@ int main()
 
     std::cout << "Connected to server!" << std::endl;
 
-    repeatedlySendHelloMessages(socket, io_service);
+    repeatedlySendMessages(socket, io_service);
   }
   catch (std::exception& e)
   {

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <exception>
+#include <string>
 #include <boost/asio.hpp>
 
 using boost::asio::ip::tcp;
@@ -7,7 +8,7 @@ using boost::asio::ip::tcp;
 std::string getMessageFromBuffer(boost::asio::streambuf& buffer) {
   std::istream inputStream(&buffer);
   std::string message;
-  inputStream >> message;
+  std::getline(inputStream, message);
   return message;
 }
 
