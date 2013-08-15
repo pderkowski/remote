@@ -10,9 +10,6 @@ void sendHello(tcp::socket& socket) {
   std::string hello = "Hello!\n";
   boost::system::error_code error;
   socket.write_some( boost::asio::buffer(hello.c_str(), hello.size()), error );
-
-  if (error != boost::asio::error::eof)
-    throw boost::system::system_error(error); 
 }
 
 void repeatedlySendHelloMessages(tcp::socket& socket, boost::asio::io_service& io) {
@@ -20,10 +17,11 @@ void repeatedlySendHelloMessages(tcp::socket& socket, boost::asio::io_service& i
     boost::asio::deadline_timer timer(io, boost::posix_time::seconds(1));
     timer.wait();
     sendHello(socket);
+    std::cout << "Sent" << std::endl;
   }
 }
 
-int clientStartUp()
+int main()
 {
   try {
     boost::asio::io_service io_service;
@@ -34,6 +32,8 @@ int clientStartUp()
 
     tcp::socket socket(io_service);
     boost::asio::connect(socket, endpoint_iterator);
+
+    std::cout << "Connected to server!" << std::endl;
 
     repeatedlySendHelloMessages(socket, io_service);
   }
