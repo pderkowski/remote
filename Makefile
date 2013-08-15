@@ -24,17 +24,19 @@ $(BIN):
 client: $(CLIENT_EXEC)
 
 $(CLIENT_EXEC): $(CLIENT_OBJS)
-	g++ -o $(CLIENT_EXEC) $(CLIENT_OBJS) $(LDLIBS)
+	$(CXX) -o $(CLIENT_EXEC) $(CLIENT_OBJS) $(LDLIBS)
 
 server: $(SERVER_EXEC)
 
 $(SERVER_EXEC): $(SERVER_OBJS)
-	 g++ -o $(SERVER_EXEC) $(SERVER_OBJS) $(LDLIBS)
+	$(CXX) -o $(SERVER_EXEC) $(SERVER_OBJS) $(LDLIBS)
 
 %.o: %.cpp
+	$(CXX) -c $? -o $@
+
 
 clean:
 	$(RM) $(OBJS)
 
 dist-clean: clean
-	$(RM) $(BIN)
+	$(RM) $(BIN)d
