@@ -1,3 +1,6 @@
+#ifndef REMOTE_CLIENT_HPP_
+#define REMOTE_CLIENT_HPP_
+
 #include <boost/asio.hpp>
 
 class Client {
@@ -17,3 +20,5 @@ private:
   boost::asio::io_service io_service_;
   boost::asio::ip::tcp::socket socket_;
 };
+
+#endif
