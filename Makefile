@@ -1,42 +1,41 @@
 CXX=g++
-RM=rm -rf
+
+SRC_DIR=src
+EXEC_DIR=bin
+INCLUDE_DIRS=$(shell pwd)/$(SRC_DIR)
+
+CFLAGS=$(foreach dir, $(INCLUDE_DIRS), -I$(dir)) -c
 LDLIBS=-lboost_system -lboost_thread -lpthread
 
-CLIENT_SRCS=$(shell find src/client -type f -name '*.cpp')
+CLIENT_SRCS=$(shell find $(SRC_DIR)/client -type f -name '*.cpp')
 CLIENT_OBJS=$(subst .cpp,.o,$(CLIENT_SRCS))
 
-SERVER_SRCS=$(shell find src/server -type f -name '*.cpp')
+SERVER_SRCS=$(shell find $(SRC_DIR)/server -type f -name '*.cpp')
 SERVER_OBJS=$(subst .cpp,.o,$(SERVER_SRCS))
 
-CLIENT_EXEC=$(BIN)/client
-SERVER_EXEC=$(BIN)/server
-
-BIN=bin
 MKDIR_P=mkdir -p
+RM=rm -rf
+
+.PHONY: all clean dist-clean
 
 all: mkdir client server
 
-mkdir: $(BIN)
+client: $(CLIENT_OBJS)
+server: $(SERVER_OBJS)
+client server:
+	$(CXX) -o $(EXEC_DIR)/$@ $? $(LDLIBS)
 
-$(BIN):
-	$(MKDIR_P) $(BIN)
-
-client: $(CLIENT_EXEC)
-
-$(CLIENT_EXEC): $(CLIENT_OBJS)
-	$(CXX) -o $(CLIENT_EXEC) $(CLIENT_OBJS) $(LDLIBS)
-
-server: $(SERVER_EXEC)
-
-$(SERVER_EXEC): $(SERVER_OBJS)
-	$(CXX) -o $(SERVER_EXEC) $(SERVER_OBJS) $(LDLIBS)
-
-%.o: %.cpp
-	$(CXX) -c $? -o $@
-
+mkdir: $(EXEC_DIR)
 
 clean:
 	$(RM) $(CLIENT_OBJS) $(SERVER_OBJS)
 
 dist-clean: clean
-	$(RM) $(BIN)
+	$(RM) $(EXEC_DIR)
+
+%.o: %.cpp
+	$(CXX) $(CFLAGS) $? -o $@
+
+$(EXEC_DIR):
+	$(MKDIR_P) $(EXEC_DIR)
+
