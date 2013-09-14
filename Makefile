@@ -1,40 +1,51 @@
-CXX=g++
+CPP=g++
 
 SRC_DIR=src
 EXEC_DIR=bin
-INCLUDE_DIRS=$(shell pwd)/$(SRC_DIR)
+INCLUDE_DIRS=$(shell pwd)/$(SRC_DIR) $(shell pwd)/$(SRC_DIR)/common
 
-CFLAGS=$(foreach dir, $(INCLUDE_DIRS), -I$(dir)) -c
+CPPFLAGS=$(foreach dir, $(INCLUDE_DIRS), -I$(dir)) -std=c++11 -c -MD -MP
 LDLIBS=-lboost_system -lboost_thread -lpthread
+WARNINGS=-Wall -Wextra -pedantic -Wshadow
 
-CLIENT_SRCS=$(shell find $(SRC_DIR)/client -type f -name '*.cpp')
+CLIENT_DIR=$(SRC_DIR)/client
+CLIENT_SRCS=$(shell find $(CLIENT_DIR) -type f -name '*.cpp')
 CLIENT_OBJS=$(subst .cpp,.o,$(CLIENT_SRCS))
 
-SERVER_SRCS=$(shell find $(SRC_DIR)/server -type f -name '*.cpp')
+SERVER_DIR=$(SRC_DIR)/server
+SERVER_SRCS=$(shell find $(SERVER_DIR) -type f -name '*.cpp')
 SERVER_OBJS=$(subst .cpp,.o,$(SERVER_SRCS))
+
+COMMON_DIR=$(SRC_DIR)/common
+COMMON_SRCS=$(shell find $(COMMON_DIR) -type f -name '*.cpp')
+COMMON_OBJS=$(subst .cpp,.o,$(COMMON_SRCS))
+
+DEPS=$(shell find . -type f -name '*.d')
 
 MKDIR_P=mkdir -p
 RM=rm -rf
+
+-include $(DEPS)
 
 .PHONY: all clean dist-clean
 
 all: mkdir client server
 
-client: $(CLIENT_OBJS)
-server: $(SERVER_OBJS)
+client: $(CLIENT_OBJS) $(COMMON_OBJS)
+server: $(SERVER_OBJS) $(COMMON_OBJS)
 client server:
-	$(CXX) -o $(EXEC_DIR)/$@ $? $(LDLIBS)
+	$(CPP) -o $(EXEC_DIR)/$@ $? $(LDLIBS)
 
 mkdir: $(EXEC_DIR)
 
 clean:
-	$(RM) $(CLIENT_OBJS) $(SERVER_OBJS)
+	$(RM) $(CLIENT_OBJS) $(SERVER_OBJS) $(DEPS)
 
-dist-clean: clean
+distclean: clean
 	$(RM) $(EXEC_DIR)
 
 %.o: %.cpp
-	$(CXX) $(CFLAGS) $? -o $@
+	$(CPP) $(CPPFLAGS) $(WARNINGS) $? -o $@
 
 $(EXEC_DIR):
 	$(MKDIR_P) $(EXEC_DIR)
