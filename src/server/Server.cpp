@@ -18,7 +18,7 @@ std::string getMessageFromBuffer(boost::asio::streambuf& buffer) {
 }
 
 
-void Server::listen(int port) {
+void remote::Server::listen(int port) {
   try
   {
     acceptConnection(port);
@@ -30,18 +30,18 @@ void Server::listen(int port) {
   }
 }
 
-void Server::acceptConnection(int port) {
+void remote::Server::acceptConnection(int port) {
   tcp::acceptor acceptor(io_service_, tcp::endpoint(tcp::v4(), port));
   acceptor.accept(socket_);
 }
 
-void Server::processRequests() {
+void remote::Server::processRequests() {
   while(true) {
     echo();
   }
 }
 
-void Server::echo()
+void remote::Server::echo()
 {
   boost::asio::streambuf inputBuffer;
 

@@ -4,11 +4,16 @@
 #include <boost/asio.hpp>
 #include <boost/function.hpp>
 
+
+namespace remote {
+
+
 class Server {
 public:
   Server() 
     : socket_(io_service_)
   { }
+  
   void listen(int port);
 private:
   void acceptConnection(int port);
@@ -18,5 +23,8 @@ private:
   boost::asio::io_service io_service_;
   boost::asio::ip::tcp::socket socket_;
 };
+
+
+} //remote
 
 #endif

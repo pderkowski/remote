@@ -1,7 +1,8 @@
 #include "Server.hpp"
 
 int main() {
-  Server server;
+  remote::Server server;
   server.listen(12345);
   return 0;
 }
+
