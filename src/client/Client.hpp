@@ -34,6 +34,6 @@ private:
 };
 
 
-}  // namespace remote
+} // namespace remote
 
 #endif

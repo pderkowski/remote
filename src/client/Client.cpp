@@ -58,5 +58,5 @@ void Client::doSendMessage(const Message& message) {
 }
 
 
-} // namespace remote
+}  // namespace remote
 
