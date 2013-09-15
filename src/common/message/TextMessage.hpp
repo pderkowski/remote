@@ -1,15 +1,18 @@
+// Copyright 2013 <Piotr Derkowski>
+
 #ifndef REMOTE_TEXTMESSAGE_HPP_
 #define REMOTE_TEXTMESSAGE_HPP_
 
+#include <string>
+#include "boost/asio.hpp"
+#include "boost/noncopyable.hpp"
 #include "Message.hpp"
-
-class boost::asio::const_buffer;
 
 
 namespace remote {
 
 
-class TextMessage : public Message {
+class TextMessage : public Message, boost::noncopyable {
 public:
   explicit TextMessage(const std::string& message);
   virtual ~TextMessage() { }
@@ -23,6 +26,6 @@ private:
 };
 
 
-} //remote
+}  // namespace remote
 
 #endif

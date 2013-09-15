@@ -1,17 +1,20 @@
+// Copyright 2013 <Piotr Derkowski>
+
 #ifndef REMOTE_TEXTMESSAGEFEEDER_HPP_
 #define REMOTE_TEXTMESSAGEFEEDER_HPP_
 
 #include <istream>
 #include <memory>
+#include "boost/noncopyable.hpp"
 #include "MessageFeeder.hpp"
 
 
 namespace remote {
 
 
-class TextMessageFeeder : public MessageFeeder {
+class TextMessageFeeder : public MessageFeeder, boost::noncopyable {
 public:
-  TextMessageFeeder(std::istream& messageStream);
+  explicit TextMessageFeeder(std::istream& messageStream);  // NOLINT(runtime/references)
   virtual ~TextMessageFeeder() { }
   virtual std::unique_ptr<Message> getMessage();
   virtual bool hasStoppedFeeding() const;
@@ -20,6 +23,6 @@ private:
 };
 
 
-} //remote
+}  // namespace remote
 
 #endif

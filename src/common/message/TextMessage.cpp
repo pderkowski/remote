@@ -1,11 +1,18 @@
-#include <boost/asio.hpp>
+// Copyright 2013 <Piotr Derkowski>
+
+#include <string>
+#include "boost/asio.hpp"
 #include "TextMessage.hpp"
 
+namespace remote {
 
-remote::TextMessage::TextMessage(const std::string& message)
-  : message_(message) 
+
+TextMessage::TextMessage(const std::string& message)
+  : message_(message)
 { }
 
-inline int remote::TextMessage::size() const {
+inline int TextMessage::size() const {
   return message_.size();
 }
+
+}  // namespace remote

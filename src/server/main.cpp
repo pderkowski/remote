@@ -1,3 +1,5 @@
+// Copyright 2013 <Piotr Derkowski>
+
 #include "Server.hpp"
 
 int main() {

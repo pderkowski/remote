@@ -45,7 +45,7 @@ distclean: clean
 	$(RM) $(EXEC_DIR)
 
 %.o: %.cpp
-	$(CPP) $(CPPFLAGS) $(WARNINGS) $? -o $@
+	$(CPP) $(CPPFLAGS) $(WARNINGS) $< -o $@
 
 $(EXEC_DIR):
 	$(MKDIR_P) $(EXEC_DIR)

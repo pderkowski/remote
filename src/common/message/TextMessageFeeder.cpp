@@ -1,23 +1,31 @@
+// Copyright 2013 <Piotr Derkowski>
+
 #include <iostream>
 #include <memory>
-#include <utils/make_unique.hpp>
+#include <string>
+#include "utils/make_unique.hpp"
 #include "TextMessageFeeder.hpp"
 #include "TextMessage.hpp"
 
 using utils::make_unique;
 
+namespace remote {
 
-remote::TextMessageFeeder::TextMessageFeeder(std::istream& messageStream)
+
+TextMessageFeeder::TextMessageFeeder(std::istream& messageStream)  // NOLINT(runtime/references)
   : messageStream_(messageStream)
 { }
 
-std::unique_ptr<remote::Message> remote::TextMessageFeeder::getMessage() {
+std::unique_ptr<Message> TextMessageFeeder::getMessage() {
   std::string message;
   std::getline(messageStream_, message);
   message += '\n';
-  return make_unique<remote::TextMessage>(message);
+  return make_unique<TextMessage>(message);
 }
 
-inline bool remote::TextMessageFeeder::hasStoppedFeeding() const {
+inline bool TextMessageFeeder::hasStoppedFeeding() const {
   return messageStream_.eof();
 }
+
+
+}  // namespace remote

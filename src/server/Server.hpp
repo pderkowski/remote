@@ -1,19 +1,22 @@
+// Copyright 2013 <Piotr Derkowski>
+
 #ifndef REMOTE_SERVER_HPP_
 #define REMOTE_SERVER_HPP_
 
-#include <boost/asio.hpp>
-#include <boost/function.hpp>
+#include "boost/asio.hpp"
+#include "boost/function.hpp"
+#include "boost/noncopyable.hpp"
 
 
 namespace remote {
 
 
-class Server {
+class Server : boost::noncopyable {
 public:
-  Server() 
+  Server()
     : socket_(io_service_)
   { }
-  
+
   void listen(int port);
 private:
   void acceptConnection(int port);
@@ -25,6 +28,6 @@ private:
 };
 
 
-} //remote
+}  // namespace remote
 
 #endif

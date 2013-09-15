@@ -1,11 +1,17 @@
+// Copyright 2013 <Piotr Derkowski>
+
 #include <iostream>
-#include <message/TextMessageFeeder.hpp>
+#include <algorithm>
+#include "utils/make_unique.hpp"
+#include "message/TextMessageFeeder.hpp"
 #include "Client.hpp"
+
+using utils::make_unique;
 
 
 int main() {
-  remote::TextMessageFeeder feeder(std::cin);
-  remote::Client client(feeder);
+  auto feeder = make_unique<remote::TextMessageFeeder>(std::cin);
+  remote::Client client(std::move(feeder));
   client.connect("localhost", "12345");
   client.run();
   return 0;
