@@ -6,22 +6,26 @@
 #include <istream>
 #include <memory>
 #include "boost/noncopyable.hpp"
-#include "MessageFeeder.hpp"
+#include "IMessageFeeder.hpp"
 
 
 namespace remote {
 
+namespace message {
 
-class TextMessageFeeder : public MessageFeeder, boost::noncopyable {
+
+class TextMessageFeeder : public IMessageFeeder, boost::noncopyable {
 public:
   explicit TextMessageFeeder(std::istream& messageStream);  // NOLINT(runtime/references)
   virtual ~TextMessageFeeder() { }
-  virtual std::unique_ptr<Message> getMessage();
+  virtual std::unique_ptr<IMessage> getMessage();
   virtual bool hasStoppedFeeding() const;
 private:
   std::istream& messageStream_;
 };
 
+
+}  // namespace message
 
 }  // namespace remote
 

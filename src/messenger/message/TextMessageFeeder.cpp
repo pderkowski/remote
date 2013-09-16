@@ -11,12 +11,14 @@ using utils::make_unique;
 
 namespace remote {
 
+namespace message {
+
 
 TextMessageFeeder::TextMessageFeeder(std::istream& messageStream)  // NOLINT(runtime/references)
   : messageStream_(messageStream)
 { }
 
-std::unique_ptr<Message> TextMessageFeeder::getMessage() {
+std::unique_ptr<IMessage> TextMessageFeeder::getMessage() {
   std::string message;
   std::getline(messageStream_, message);
   message += '\n';
@@ -27,5 +29,7 @@ inline bool TextMessageFeeder::hasStoppedFeeding() const {
   return messageStream_.eof();
 }
 
+
+}  // namespace message
 
 }  // namespace remote

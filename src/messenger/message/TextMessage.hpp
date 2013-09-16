@@ -11,6 +11,8 @@
 
 namespace remote {
 
+namespace message {
+
 
 class TextMessage : public Message, boost::noncopyable {
 public:
@@ -25,6 +27,8 @@ private:
   std::string message_;
 };
 
+
+}  // namespace message
 
 }  // namespace remote
 

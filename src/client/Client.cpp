@@ -7,8 +7,8 @@
 #include "boost/array.hpp"
 #include "boost/bind.hpp"
 #include "boost/asio.hpp"
-#include "message/MessageFeeder.hpp"
-#include "message/Message.hpp"
+#include "messenger/message/MessageFeeder.hpp"
+#include "messenger/message/IMessage.hpp"
 #include "Client.hpp"
 
 namespace asio = boost::asio;

@@ -6,6 +6,8 @@
 
 namespace remote {
 
+namespace message {
+
 
 TextMessage::TextMessage(const std::string& message)
   : message_(message)
@@ -14,5 +16,8 @@ TextMessage::TextMessage(const std::string& message)
 inline int TextMessage::size() const {
   return message_.size();
 }
+
+
+}  // namespace message
 
 }  // namespace remote

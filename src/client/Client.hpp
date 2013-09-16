@@ -7,7 +7,7 @@
 #include <memory>
 #include "boost/asio.hpp"
 #include "boost/noncopyable.hpp"
-#include "message/MessageFeeder.hpp"
+#include "messenger/message/IMessageFeeder.hpp"
 
 class Message;
 
@@ -17,7 +17,7 @@ namespace remote {
 
 class Client : boost::noncopyable {
 public:
-  explicit Client(std::unique_ptr<MessageFeeder> feeder);
+  explicit Client(std::unique_ptr<message::IMessageFeeder> feeder);
   void connect(const std::string& host, const std::string& service);
   void run();
 
@@ -25,12 +25,12 @@ private:
   boost::asio::ip::tcp::resolver::iterator resolve(const std::string& host,
                                                    const std::string& service);
   void sendMessages();
-  void doSendMessage(const Message& message);
+  void doSendMessage(const message::IMessage& message);
 
 private:
   boost::asio::io_service io_service_;
   boost::asio::ip::tcp::socket socket_;
-  std::unique_ptr<MessageFeeder> feeder_;
+  std::unique_ptr<message::IMessageFeeder> feeder_;
 };
 
 
