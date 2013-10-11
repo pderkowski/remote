@@ -2,7 +2,7 @@ CPP=g++
 
 SRC_DIR=src
 EXEC_DIR=bin
-INCLUDE_DIRS=$(shell pwd)/$(SRC_DIR) $(shell pwd)/$(SRC_DIR)/common
+INCLUDE_DIRS=$(shell pwd)/$(SRC_DIR)
 
 CPPFLAGS=$(foreach dir, $(INCLUDE_DIRS), -I$(dir)) -std=c++11 -c -MD -MP
 LDLIBS=-lboost_system -lboost_thread -lpthread
@@ -25,15 +25,14 @@ DEPS=$(shell find . -type f -name '*.d')
 MKDIR_P=mkdir -p
 RM=rm -rf
 
--include $(DEPS)
+.PHONY: all clean distclean
 
-.PHONY: all clean dist-clean
-
-all: mkdir client server
+all: mkdir server client 
 
 client: $(CLIENT_OBJS) $(COMMON_OBJS)
+	$(CPP) -o $(EXEC_DIR)/$@ $? $(LDLIBS)
+
 server: $(SERVER_OBJS) $(COMMON_OBJS)
-client server:
 	$(CPP) -o $(EXEC_DIR)/$@ $? $(LDLIBS)
 
 mkdir: $(EXEC_DIR)
@@ -50,3 +49,4 @@ distclean: clean
 $(EXEC_DIR):
 	$(MKDIR_P) $(EXEC_DIR)
 
+-include $(DEPS)

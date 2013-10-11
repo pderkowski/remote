@@ -2,17 +2,12 @@
 
 #include <iostream>
 #include <algorithm>
-#include "utils/make_unique.hpp"
-#include "messenger/message/TextMessageFeeder.hpp"
 #include "Client.hpp"
-
-using utils::make_unique;
-
+#include "messenger/TextMessage.hpp"
 
 int main() {
-  auto feeder = make_unique<remote::message::TextMessageFeeder>(std::cin);
-  remote::Client client(std::move(feeder));
+  client::Client<messenger::TextMessage> client;
   client.connect("localhost", "12345");
-  client.run();
+  client.run(std::cin, std::cout);
   return 0;
 }

@@ -1,26 +1,84 @@
 // Copyright 2013 <Piotr Derkowski>
 
-#ifndef MESSENGER_HPP_
-#define MESSENGER_HPP_
+#ifndef MESSENGER_MESSENGER_HPP_
+#define MESSENGER_MESSENGER_HPP_
 
-#include "IMessenger.hpp"
+#include <iostream>
+#include <thread>
+#include <functional>
+#include <stdexcept>
+#include "boost/asio/streambuf.hpp"
+#include "boost/noncopyable.hpp"
+#include "boost/asio.hpp"
+
+namespace messenger {
 
 
-namespace remote {
-
-
-class Messenger : public IMessenger {
+template <class Message>
+class Messenger : public boost::noncopyable {
 public:
-  explicit Messenger(std::shared_ptr<boost::asio::ip::tcp::socket>);
+  Messenger()
+      : io_service_(), socket_(io_service_)
+  { }
 
-  virtual void deliver(const message::Message&) const;
-  virtual std::unique_ptr<message::Message> receive() const;
+  void send(const Message& message) {
+    boost::asio::streambuf bufferedMessage;
+    std::ostream streamedMessage(&bufferedMessage);
+    streamedMessage << message << '\n';
+    boost::asio::write(socket_, bufferedMessage, boost::asio::transfer_all());
+  }
 
-private:
-  std::shared_ptr<boost::asio::ip::tcp::socket> socket_;
+  Message receive() {
+    boost::asio::streambuf bufferedMessage;
+    boost::asio::read_until(socket_, bufferedMessage, '\n');
+
+    std::istream streamedMessage(&bufferedMessage);
+    Message message;
+    streamedMessage >> message;
+    return message;
+  }
+
+  void sendMessages(std::istream& streamOfMessagesToSend) {
+    std::cout << "Starting sending messages." << std::endl;
+    while (streamOfMessagesToSend.good()) {
+      Message message;
+      streamOfMessagesToSend >> message;
+      send(message);
+    }
+  }
+
+  void receiveMessages(std::ostream& streamForReceivedMessages) {
+    std::cout << "Starting receiving messages." << std::endl;
+    Message message;
+    while (true) {
+      message = receive();
+      streamForReceivedMessages << message << std::endl;
+    }
+  }
+
+  void run(std::istream& streamOfMessagesToSend, std::ostream& streamForReceivedMessages) {
+    try {
+      std::thread sending(std::bind(&messenger::Messenger<Message>::sendMessages, this, 
+        std::ref(streamOfMessagesToSend)));
+      std::thread receiving(std::bind(&messenger::Messenger<Message>::receiveMessages, this, 
+        std::ref(streamForReceivedMessages)));
+
+      sending.join();
+      receiving.join();
+    }
+    catch(const std::exception& e) {
+      std::cerr << e.what() << std::endl;
+    }
+  }
+
+  virtual ~Messenger() { }
+
+protected:
+  boost::asio::io_service io_service_;
+  boost::asio::ip::tcp::socket socket_;
 };
 
 
-}  // namespace remote
+}  // namespace messenger
 
-#endif
+#endif  // MESSENGER_MESSENGER_HPP_

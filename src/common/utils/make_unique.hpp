@@ -1,12 +1,11 @@
 // Copyright 2012 <Herb Sutter>
-#ifndef UTILS_MAKE_UNIQUE_HPP_
-#define UTILS_MAKE_UNIQUE_HPP_
+#ifndef COMMON_MAKE_UNIQUE_HPP_
+#define COMMON_MAKE_UNIQUE_HPP_
 
 #include <memory>
 #include <utility>
 
-
-namespace utils {
+namespace common {
 
 
 template<typename T, typename... Args>
@@ -15,7 +14,6 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 }
 
 
-}  // namespace utils
+}  // namespace common
 
-
-#endif
+#endif  // COMMON_MAKE_UNIQUE_HPP_
